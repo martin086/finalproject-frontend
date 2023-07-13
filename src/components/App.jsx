@@ -7,6 +7,8 @@ import { DarkModeProvider } from '../context/DarkModeContext';
 //Toastify
 import { ToastContainer } from 'react-toastify';
 //Components
+import Login from './Login/Login'
+import Register from './Register/Register'
 import Navbar from './Navbar/Navbar';
 import NotFound from './NotFound/NotFound';
 import ItemListContainer from './ItemListContainer/ItemListContainer';
@@ -23,7 +25,9 @@ const App = () => {
         <DarkModeProvider>
           <Navbar/>
           <Routes>
-            <Route path='/' element={<ItemListContainer/>}/>
+            <Route path='/' element={<Login/>}/>
+            <Route path='/login' element={<Login/>}/>
+            <Route path='/register' element={<Register/>}/>
             <Route path='/category/:category' element={<ItemListContainer/>}/>
             <Route path='/product/:id' element={<ItemDetailContainer/>}/>  
             <Route path='/cart' element={<Cart/>}/>

@@ -1,6 +1,6 @@
 import { useRef } from "react"
 
-export const Register = () => {
+const Register = () => {
 
     const datForm = useRef() //Crear una referencia para consultar los valoresa actuales del form
 
@@ -41,10 +41,10 @@ export const Register = () => {
                     <label htmlFor="email" className="form-label">Email</label>
                     <input type="email" className="form-control" name="email" />
                 </div>
-                <div className="mb-3">
+                {/* <div className="mb-3">
                     <label htmlFor="age" className="form-label">Edad</label>
                     <input type="number" className="form-control" name="age" />
-                </div>
+                </div> */}
                 <div className="mb-3">
                     <label htmlFor="password" className="form-label">Contraseña</label>
                     <input type="password" className="form-control" name="password" />
@@ -55,3 +55,5 @@ export const Register = () => {
         </div>
     )
 }
+
+export default Register;

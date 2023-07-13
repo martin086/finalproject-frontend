@@ -3,6 +3,7 @@ import ItemList from "../ItemList/ItemList";
 //import { consultarBDD } from "../../assets/funciones.js";
 import { useParams } from "react-router-dom";
 import { cargarBDD, getProductos, getProducto, updateProducto, deleteProducto } from "../../assets/firebase";
+//import { cargarBDD, getProductos, getProducto, updateProducto, deleteProducto } from "../../assets/firebase";
 
 //Consultar BDD
 const ItemListContainer = () => {
