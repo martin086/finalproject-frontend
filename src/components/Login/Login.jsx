@@ -1,4 +1,4 @@
-import { useRef, useState, useContext } from "react"
+import { useState, useContext } from "react"
 import { Link, useNavigate } from 'react-router-dom';
 import { login } from "../../db/Session";
 import { UserContext } from "../../context/UserContext";
@@ -49,6 +49,9 @@ const Login = () => {
             </form>
             <div className="d-flex justify-content-center m-1">
                 <Link to="/forgotpassword">Olvidé mi contraseña</Link>
+                <Link className="d-flex justify-content-center m-1" to="/register">
+                    Registrarse
+                </Link>
             </div>
         </>
     );

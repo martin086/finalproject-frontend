@@ -1,13 +1,14 @@
 import ItemCount from "../ItemCount/ItemCount";
 import { Link } from "react-router-dom";
+import { useContext } from "react";
 import { useDarkModeContext } from "../../context/DarkModeContext";
-import { useCarritoContext } from "../../context/CarritoContext";
+import { CartContext } from '../../context/CartContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
 const ItemDetail = ({item}) => {
     const {darkMode} = useDarkModeContext()
-    const {addItem} = useCarritoContext()
+    const {addItem} = useContext(CartContext)
     const onAdd = (contador) => {
         addItem(item, contador)
     }

@@ -1,20 +1,38 @@
-import { Link } from 'react-router-dom'
-import { useCarritoContext } from '../../context/CarritoContext'
+import { CartContext } from "../../context/CartContext";
+import { useContext } from 'react';
+import { Badge, Dropdown } from 'react-bootstrap';
+import { CartWidgetItem } from './CartWidgetItem';
+import { CartWidgetActions } from './CartWidgetActions';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
 
 const CartWidget = () => {
-  const {getItemQuantity} = useCarritoContext()
+  const { totalItems, cart } = useContext(CartContext)
+
+
   
   return (
-    <>
-      <button className="btn btn-primary active mx-2">
-        <Link className="nav-link active" to={"/cart"}>
-          <i className="fa-solid fa-cart-shopping"></i>
-          {getItemQuantity() > 0 && <span className="cantCarrito">{getItemQuantity()}</span>}
-        </Link>
-      </button>
-    </>  
-      
-  )
+    <Dropdown className="mx-1" align="end">
+      <Dropdown.Toggle variant="success" id="dropdown-basic">
+          <FontAwesomeIcon icon={faCartShopping} color="white" size="1x" />
+          {totalItems > 0 && <Badge>{totalItems}</Badge>}
+      </Dropdown.Toggle>
+
+      <Dropdown.Menu style={{ minWidth: 370 }}>
+          {totalItems === 0 ? (
+              <span className="cart-item mb-0">Carrito vacío</span>
+          ) : (
+              <>
+                  {cart.map((item) => (
+                      <CartWidgetItem item={item} key={item._id} />
+                  ))}
+
+                  <CartWidgetActions />
+              </>
+          )}
+      </Dropdown.Menu>
+    </Dropdown>
+  );
 }
 
 export default CartWidget;

@@ -1,53 +1,48 @@
 import { useState, useEffect } from "react";
 import ItemList from "../ItemList/ItemList";
+import { useParams, useLocation } from "react-router-dom";
+import { getProducts } from "../../db/Product";
+import queryString from 'query-string';
 //import { consultarBDD } from "../../assets/funciones.js";
-import { useParams } from "react-router-dom";
-import { cargarBDD, getProductos, getProducto, updateProducto, deleteProducto } from "../../assets/firebase";
 //import { cargarBDD, getProductos, getProducto, updateProducto, deleteProducto } from "../../assets/firebase";
 
 //Consultar BDD
 const ItemListContainer = () => {
 
-    const [productos, setProductos] = useState([]);
-    const {category} = useParams()
+    const [products, setProducts] = useState([]);
+    //const {category} = useParams()
+    const [params, setParams] = useState({});
+    const [isLoading, setLoading] = useState(true);
+    
+    const location = useLocation();
+    async function queryProducts() {
+      const { limit, page, category, stock, sort } = params;
+      const response = await getProducts(limit, page, category, stock, sort);
+      if (response.status === 'success') {
+          setTimeout(() => {
+              setLoading(false);
+              setProducts(response.payload);
+          }, 1000);
+      }
+    }
+
     useEffect(() => {
-        if(category) {
-          getProductos().then(products => {
-            const productsList = products.filter(prod => prod.stock > 0).filter(prod => prod.idCategoria === parseInt(category)).sort((p1, p2) => p1.idCategoria - p2.idCategoria);
-            const cardProductos = ItemList({productsList})
-            //const prodSort = cardProductos.sort((p1, p2) => p1.idCategoria - p2.idCategoria)
-            setProductos(cardProductos);
-          })
-        } else {
-          getProductos().then(products => {
-            const productsList = products.filter(prod => prod.stock > 0)
-            const cardProductos = ItemList({productsList})
-            //const prodSort = cardProductos.sort((p1, p2) => p1.idCategoria - p2.idCategoria)
-            setProductos(cardProductos);
-          })
-        }
+      const queryParams = queryString.parse(location.search);
+      setParams(queryParams);
+    }, [location.search]);
 
-        /*
-        getProducto("4yGGt8Rm1qtu9ECpRU3C").then(prod => {
-                prod.stock -= 16
-                delete prod.id
-                updateProducto("4yGGt8Rm1qtu9ECpRU3C", prod).then(estado => console.log(estado))
-        */
-
-        //cargarBDD().then(productos => console.log(productos))
-        //getProductos().then(productos => console.log(productos))
-        //Example id:"0HwKdXD7EbLCwKZfSr9n"
-        //getProducto("0HwKdXD7EbLCwKZfSr9n").then(prod => console.log(prod))
-        
-          
-    }, [category]);
-    console.log(productos);
+    useEffect(() => {
+      setLoading(true);
+      queryProducts();
+    }, [params]);
     
     return (
         
-          <div className="row cardProductos card-img-top">
-              {productos}
-          </div>
+
+      <ItemList products={products} />
+          // <div className="row cardProductos card-img-top">
+          //     {products}
+          // </div>
         
 
     );

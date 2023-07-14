@@ -1,10 +1,7 @@
 const CART_API = 'http://localhost:8080/api/carts'
 const HEADERS = { 'Content-Type': 'application/json' }
 
-/** 
- * @description Uses the current session user id to retrieve the assigned cart 
- * @returns JSON with the populated cart content
- * */
+
 export async function getCart() {
     try {
         const cart = await fetch(`${CART_API}`, {
@@ -37,14 +34,7 @@ export async function emptyCart() {
     }
 }
 
-/** 
- * @description Request to carts API endpoint to add a product to the current session cart.
- * If the product already exists, its quantity is increased by 1 unit.
- * The cart is obtained from the current session.
-@param productID Product's ID to be modified
-@returns true: product added or quantity increased by 1
-@returns null: error 
-*/
+
 export async function addProductToCart(productID) {
     try {
         const cart = await fetch(`${CART_API}/products/${productID}`, {
@@ -62,14 +52,7 @@ export async function addProductToCart(productID) {
     }
 }
 
-/** 
- * @description Overwrites the data stored in the session cart
- * @param newCartContent Object: {productId, quantity}, 
- * or
- * Array: [{productId,quantity},{productId,quantity}]
-@returns Updated cart
-@returns false
-*/
+
 export async function updateAllCart(newCartContent) {
     try {
         const cart = await fetch(CART_API, {
@@ -87,11 +70,7 @@ export async function updateAllCart(newCartContent) {
     }
 }
 
-/** 
- * @description Request to carts API endpoint to change a product's quantity
-@param productID Product's ID to be modified
-@param newQty New quantity of the selected product
-*/
+
 export async function updateProdQtyCart(productID, newQty) {
     try {
         const cart = await fetch(`${CART_API}/products/${productID}`, {

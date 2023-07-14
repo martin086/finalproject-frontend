@@ -1,18 +1,24 @@
 const PRODUCTS_API = 'http://localhost:8080/api/products';
 
 
-export const getProducts = async (limit, page, category, stock, sort) => { //Verificados en la funcion principal
+export const getProducts = async (limit, page, category, stock, sort) => { 
     try {
         const params = {
-            limit: limit ? `limit=${limit}&` : '10',
-            page: page ? `page=${page}&` : '1',
+            limit: limit ? `limit=${limit}&` : 'limit=10&',
+            page: page ? `page=${page}&` : 'page=1&',
             category: category ? `category=${category}&` : '',
             stock: stock ? `stock=${stock}&` : '',
             sort: sort ? `sort=${sort}&` : '',
         }
 
         const productsQuery = `${PRODUCTS_API}?${params.category}${params.limit}${params.page}${params.stock}${params.sort}`;
-        const response = await fetch(productsQuery);
+        const response = await fetch(productsQuery, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+                //"Authorization": "bearer TOKEN" CONTROLES DE RUTAS(usuarios logueados)
+            },
+        })
         return await response.json()
     } catch (error) {
         throw new Error(error)
@@ -72,7 +78,9 @@ export const updateProduct = async (producto) => {
 
 export const deleteProduct = async (id) => {
     //Verificacion si existe el producto
+    // eslint-disable-next-line no-undef
     if (getProductById(producto.id)) {
+        // eslint-disable-next-line no-undef
         const response = await fetch(`${PRODUCTS_API}/${producto.id}`, {
             method: "DELETE",
             headers: {

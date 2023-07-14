@@ -48,12 +48,8 @@ export const logout = async () => {
             headers: HEADERS
         })
         if (response.ok) {
-        /* example:
-        {status: 'success', message: '$first_name logged out'}
-        */
             return true
         }
-        //401 = no session found or 500
         return false
 
     } catch (error) {

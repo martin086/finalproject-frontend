@@ -1,9 +1,8 @@
-import { createContext, useState, useEffect, useContext } from 'react';
+import { createContext, useState, useEffect } from 'react';
 import { getCart, emptyCart, addProductToCart, updateProdQtyCart, removeProductCart, createNewPurchase } from '../db/Cart.js';
 
 export const CartContext = createContext(null);
 
-export const useCartContext = () => useContext(CartContext);
 export const CartProvider = ({ children }) => {
 
     const [cart, setCart] = useState([]);
@@ -28,7 +27,7 @@ export const CartProvider = ({ children }) => {
         try {
             const fetchedCart = await getCart();
 
-            if (Array.isArray(fetchedCart.cart.products)) {
+            if (Array.isArray(fetchedCart.cart)) {
                 const newCart = [];
 
                 for (const product of fetchedCart.cart.products) {

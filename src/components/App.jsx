@@ -1,7 +1,8 @@
+//CSS
 import './App.css';
 import 'react-toastify/dist/ReactToastify.css'
 //Router Dom
-import {BrowserRouter, Routes, Route} from 'react-router-dom'
+import {Routes, Route} from 'react-router-dom'
 //Context
 import { DarkModeProvider } from '../context/DarkModeContext';
 import { CartProvider } from '../context/CartContext';
@@ -26,7 +27,7 @@ const App = () => {
 
   return (
     <>
-      <BrowserRouter>
+      
         <DarkModeProvider>
           <UserProvider>
             <CartProvider>
@@ -38,7 +39,7 @@ const App = () => {
                 <Route path='/forgotpassword' element={<ForgotPassword/>}/>
                 <Route path='/category/:category' element={<ItemListContainer/>}/>
                 <Route path='/products/*' element={<ItemListContainer/>}/>  
-                <Route path='/product/:id' element={<ItemDetailContainer/>}/>  
+                <Route path='/item/:id' element={<ItemDetailContainer/>}/>  
                 <Route path='/cart' element={<Cart/>}/>
                 <Route path='/checkout' element={<Checkout/>}/>
                 <Route path='/contacto' element={<Contacto/>}/>
@@ -49,7 +50,7 @@ const App = () => {
             </CartProvider>
           </UserProvider>
         </DarkModeProvider>
-      </BrowserRouter>
+      
     </>
   );
 }
