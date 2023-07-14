@@ -2,6 +2,9 @@ import ItemCount from "../ItemCount/ItemCount";
 import { Link } from "react-router-dom";
 import { useDarkModeContext } from "../../context/DarkModeContext";
 import { useCarritoContext } from "../../context/CarritoContext";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+
 const ItemDetail = ({item}) => {
     const {darkMode} = useDarkModeContext()
     const {addItem} = useCarritoContext()
@@ -22,7 +25,12 @@ const ItemDetail = ({item}) => {
                     <p className="card-text">Precio: $ {new Intl.NumberFormat('de-DE').format(item.precio)} </p>
                     <p className="card-text">Stock: {item.stock} </p>
                     <ItemCount inicial = {1} stock={item.stock} onAdd={onAdd}/><br/>
-                    <button className={`btn mt-2 ${darkMode ? 'btn-primary' : 'btn-secondary'}`}><Link className="nav-link" to={"/cart"}>Ir al Carrito</Link></button>
+                    <button className={`btn mt-2 ${darkMode ? 'btn-primary' : 'btn-secondary'}`}>
+                        <Link className="nav-link" to={"/cart"}>Ir al Carrito</Link>
+                    </button>
+                    <button className={`btn mt-2 btn-warning`}>
+                    <Link className="nav-link" to={"/products"}><FontAwesomeIcon icon={faArrowLeft} />Go Back</Link>
+                    </button>
                 </div>
             </div>
         </div>
