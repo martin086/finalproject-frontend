@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect } from 'react';
-import { getCart, emptyCart, addProductToCart, updateProdQtyCart, removeProductCart, createNewPurchase } from '../db/Cart.js';
+import { getCart, emptyCart, addProductToCart, updateProdQtyCart, removeProductCart, createNewPurchase } from '../db/Cart';
 
 export const CartContext = createContext(null);
 

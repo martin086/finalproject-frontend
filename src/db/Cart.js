@@ -1,4 +1,5 @@
-const CART_API = 'http://localhost:8080/api/carts'
+const CART_API = 'http://localhost:8080/api/carts' || 'https://finalproject-backend-rwbk.onrender.com/api/carts';
+//const CART_API = 'https://finalproject-backend-rwbk.onrender.com/api/carts'
 const HEADERS = { 'Content-Type': 'application/json' }
 
 

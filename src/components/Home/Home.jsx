@@ -14,17 +14,22 @@ const Home = () => {
         const checkSession = async () => {
             try {
                 const sessionData = await getCurrentSession();
-                if (sessionData) {
+                if (sessionData !== null) {
                     setUser(sessionData);
-                    fetchCart();
-                    navigate('/products');
                 }
             } catch (error) {
                 console.error('Error checking session: ', error);
             }
         };
         checkSession();
-    }, []);
+    }, [setUser]);
+
+    useEffect(() => {
+        if(userData) {
+            fetchCart(userData);
+            navigate('/products');
+        }
+    }, [userData, fetchCart, navigate])
 
     return <>{!userData && <Login />}</>;
 };

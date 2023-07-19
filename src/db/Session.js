@@ -1,4 +1,4 @@
-const SESSION_API = 'http://localhost:8080/api/session'
+const SESSION_API = 'http://localhost:8080/api/session' || 'https://finalproject-backend-rwbk.onrender.com/api/session';
 const HEADERS = { 'Content-Type': 'application/json' }
 
 export const getCurrentSession = async () => {
@@ -15,30 +15,37 @@ export const getCurrentSession = async () => {
             return null
         }
 
-        return undefined
+        throw new Error('Failed to get current session');
 
     } catch (error) {
-        throw new Error(error)
+        throw new Error('An error occurred while fetching the current session');
     }
 }
 
 export const login = async (email, password) => {
+    
     try {
-    const response = await fetch(`${SESSION_API}/login`, {
-        method: 'POST',
-        credentials: 'include',
-        headers: HEADERS,
-        body: JSON.stringify({ email, password })
-    });
-    if (response.ok) {
-        return await response.json()
-    }
-    console.log('Error on login - invalid credentials');
-    return false
+        const response = await fetch (`${SESSION_API}/login`, {
+            method: 'POST',
+            credentials: 'include',
+            headers: HEADERS,
+            body: JSON.stringify({ email, password })
+        })
+        if (response.ok) {
+            const data = await response.json();
+            //document.cookie = `token=${data.token};expires=${new Date(Date.now() + 1 * 24 * 60 * 60 * 1000).toUTCString()};path=/`
+            //console.log(data.token)
+            return data; // Return the data for successful login
+        } else {
+            const errorData = await response.json();
+            console.error('Login failed:', errorData);
+            throw new Error('Login failed');
+        }        
     } catch (error) {
-        throw new Error(error)
+        console.error(error)
+        throw new Error('An error occurred while logging in');
     }
-}
+};
 
 export const logout = async () => {
     try {

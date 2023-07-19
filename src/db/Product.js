@@ -1,7 +1,7 @@
-const PRODUCTS_API = 'http://localhost:8080/api/products';
+const PRODUCTS_API = 'http://localhost:8080/api/products' || 'https://finalproject-backend-rwbk.onrender.com/api/products';
 
 
-export const getProducts = async (limit, page, category, stock, sort) => { 
+export const getProducts = async (limit = 10, page = 1, category = null, stock = null, sort = null) => { 
     try {
         const params = {
             limit: limit ? `limit=${limit}&` : 'limit=10&',
@@ -16,10 +16,13 @@ export const getProducts = async (limit, page, category, stock, sort) => {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
-                //"Authorization": "bearer TOKEN" CONTROLES DE RUTAS(usuarios logueados)
             },
         })
-        return await response.json()
+        const productsData = await response.json(); // Store the response in a variable
+        console.log(productsData);
+        const productsArray = productsData.payload;
+        console.log(productsArray)
+        return productsArray;
     } catch (error) {
         throw new Error(error)
     }

@@ -1,6 +1,6 @@
 import { useState, useContext } from "react"
 import { Link, useNavigate } from 'react-router-dom';
-import { login } from "../../db/Session";
+import { login } from "../../db/Session.js";
 import { UserContext } from "../../context/UserContext";
 import { CartContext } from "../../context/CartContext";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -12,24 +12,24 @@ const Login = () => {
     const { fetchCart } = useContext(CartContext);
     const navigate = useNavigate();
 
-    const [loginError, setLoginError] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [loginError, setLoginError] = useState(false);
 
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
             const userData = await login(email, password);
-
-            if (userData) {
+            console.log(userData)
+            if (userData && !userData.error) {
                 setUser(userData);
-                fetchCart();
+                fetchCart(userData);
                 setLoginError(false);
+                e.target.reset()//Reset form
                 navigate('/products');
-                return;
             }
-            setLoginError(true);
         } catch (error) {
+            console.error(error)
             setLoginError(true);
         }
     };
@@ -39,17 +39,18 @@ const Login = () => {
             <form className="d-flex flex-column justify-content-center" onSubmit={handleLogin}>
                 <label htmlFor="email">Email:</label>
                 <input onChange={(e) => setEmail(e.target.value)} className="m-1" type="email" id="email" name="email" required />
-
+                
                 <label htmlFor="password">Password:</label>
                 <input onChange={(e) => setPassword(e.target.value)} className="m-1" type="password" id="password" name="password" required />
-                <button className="btn btn-primary m-1" id="submitBtn" type="submit">
+                
+                <button className="btn btn-primary m-2 justify-content-center" id="submitBtn" type="submit">
                     <FontAwesomeIcon icon={faArrowRightToBracket} /> Login
                 </button>
                 <p className={`message-error-login text-center ${loginError ? '' : 'hidden'}`}>Usuario o contraseña incorrectos</p>
             </form>
             <div className="d-flex justify-content-center m-1">
-                <Link to="/forgotpassword">Olvidé mi contraseña</Link>
-                <Link className="d-flex justify-content-center m-1" to="/register">
+                <Link className="m-1" to="/forgotpassword">Olvidé mi Password</Link>
+                <Link className="m-1" to="/register">
                     Registrarse
                 </Link>
             </div>
