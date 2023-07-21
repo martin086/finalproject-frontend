@@ -7,7 +7,7 @@ const ItemList = ({productsList}) => {
     return (        
         <>
             {productsList.map((product) => (
-            <Item key={product._id} prod={product}/>
+            <Item key={product.id} prod={product}/>
             ))}
         </>  
         

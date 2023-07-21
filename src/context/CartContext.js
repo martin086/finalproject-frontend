@@ -8,7 +8,7 @@ export const CartProvider = ({ children }) => {
     const [cart, setCart] = useState([]);
     const [totalItems, setTotalItems] = useState(0);
     const [totalPrice, setTotalPrice] = useState(0);
-    const [ticket, setTicket] = useState(null);
+    const [invoice, setInvoice] = useState(null);
 
     useEffect(() => {
         setTotalItems(cart.reduce((previous, current) => previous + current.quantity, 0));
@@ -21,7 +21,7 @@ export const CartProvider = ({ children }) => {
 
     useEffect(() => {
         fetchCart();
-    }, [ticket]);
+    }, [invoice]);
 
     async function fetchCart() {
         try {
@@ -52,20 +52,20 @@ export const CartProvider = ({ children }) => {
             let product = cart[index];
             product.quantity += qty;
             const newCart = [...cart];
-            // Elimina el elemento con qty anterior e inserta qty actualizada
+            
             newCart.splice(index, 1, product);
             setCart([...newCart]);
 
-            // * Remote management
+            
             try {
                 await updateProdQtyCart(item._id, product.quantity);
             } catch (error) {
                 console.error('Error adding to the cart: ', error);
             }
         } else {
-            // * Local management
+            
             setCart([...cart, { ...item, quantity: qty }]);
-            // * Remote management
+            
             try {
                 await addProductToCart(item._id);
                 if (qty > 1) {
@@ -109,7 +109,7 @@ export const CartProvider = ({ children }) => {
         try {
             const purchaseResult = await createNewPurchase();
             if (purchaseResult) {
-                setTicket(purchaseResult);
+                setInvoice(purchaseResult);
             }
         } catch (error) {
             console.error('Error on purchase process:', error);
@@ -127,7 +127,7 @@ export const CartProvider = ({ children }) => {
                 totalPrice,
                 setTotalPrice,
                 totalItems,
-                ticket,
+                invoice,
                 purchaseCart,
             }}
         >

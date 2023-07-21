@@ -9,7 +9,7 @@ import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
 const CartWidget = () => {
   const { totalItems, cart } = useContext(CartContext)
 
-
+  console.log(cart)
   
   return (
     <Dropdown className="mx-1" align="end">
@@ -24,7 +24,7 @@ const CartWidget = () => {
           ) : (
               <>
                   {cart.map((item) => (
-                      <CartWidgetItem item={item} key={item._id} />
+                      <CartWidgetItem item={item} key={item._id}/>
                   ))}
 
                   <CartWidgetActions />

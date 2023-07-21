@@ -1,9 +1,10 @@
 import { useState, useEffect, useContext } from "react";
 import ItemList from "../ItemList/ItemList";
 import { logout } from "../../db/Session";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { getProducts } from "../../db/Product";
 import { UserContext } from "../../context/UserContext";
+import queryString from 'query-string';
 
 //import { consultarBDD } from "../../assets/funciones.js";
 //import { cargarBDD, getProductos, getProducto, updateProducto, deleteProducto } from "../../assets/firebase";
@@ -13,45 +14,61 @@ import { UserContext } from "../../context/UserContext";
 const ItemListContainer = () => {
 
   const [productos, setProductos] = useState([]);
-  const { category } = useParams();
   const { userData, setUser } = useContext(UserContext);
   const navigate = useNavigate();
+  const [params, setParams] = useState({});
   const [pagination, setPagination] = useState(null);
   
-    const fetchProducts = async (page) => {
+  
+    const location = useLocation();
+    const fetchProducts = async () => {
       try {
-        const productsData = await getProducts()
-        
-          if(productsData) {
-            if(category) {
-              const productsList = productsData
-                .filter((prod) => prod.stock > 0)
-                .filter((prod) => prod.idCategoria === parseInt(category))
-                .sort((p1, p2) => p1.idCategoria - p2.idCategoria);
-            setProductos(productsList);
-            } else {
-              const productsList = productsData
-              .filter((prod) => prod.stock > 0);
-              setProductos(productsList);
-            }
-          } else {
+        const { page, limit, category, stock, sort } = params;
+        const response = await getProducts({...params})
+
+        if(response.status === 'success') {
+            const productsList = response
+            console.log(productsList)
+            setProductos(response.payload);
+            setPagination({
+              page: response.page,
+              totalPages: response.totalPages,
+              prevLink: response.prevLink,
+              nextLink: response.nextLink
+            });
+          
+        } else {
             console.error("No products data found.");
-          }
+        }
       } catch (error) {
           console.error("Error fetching products:", error);
       }
     };
 
     useEffect(() => {
-      fetchProducts(); // Fetch initial page (page 1) when the component mounts
-    }, [category]);
+      const queryParams = queryString.parse(location.search);
+      //const page = queryParams.page ? parseInt(queryParams.page) : 1;
+      setParams(queryParams);
+    }, [location.search]);
+
+    useEffect(() => {
+      fetchProducts();
+    }, [params]);
+
+      // Function to handle pagination navigation
+    const handlePaginationClick = (page) => {
+      let navPage = page.slice(4);
+      console.log(navPage)
+      navigate(`${navPage}`);
+  };
 
   // Function to handle logout
   const handleLogout = async () => {
     try {
-      await logout();
-      setUser((newUserData) => newUserData ? { ...newUserData, cart_id: null } : null); // Clear the userData in the UserContext
-      navigate('/login'); // Redirect to '/login' after logout
+      const logoutSession = await logout();
+      if(logoutSession) {
+        navigate('/login'); // Redirect to '/login' after logout
+      }
     } catch (error) {
       console.error("Error during logout:", error);
     }
@@ -61,34 +78,39 @@ const ItemListContainer = () => {
     navigate('/login')
     return null;
   }
-  console.log(userData);
+  //console.log(userData);
   
   return (
       
     <>
-      <div>
-        <p>Bienvenido {userData.user.first_name}, tu rol es: {userData.user.role}.</p>
+      <div className="fluid-container">
+        <span>Bienvenido {userData.user.first_name}, tu rol es: {userData.user.role}.</span>
         <button onClick={handleLogout}>Logout</button>
       </div>
-      <div className="row cardProductos card-img-top">
+      <div className="row cardProductos card-img-top itemListContainer">
       <ItemList productsList={productos} />
       </div>
-      <div>
-        {pagination && (
-          <div>
-            {pagination.hasPrevPage && (
-              <button onClick={() => fetchProducts(pagination.prevPage)}>
-                Previous
-              </button>
-            )}
-            {pagination.hasNextPage && (
-              <button onClick={() => fetchProducts(pagination.nextPage)}>
-                Next
-              </button>
-            )}
+      {pagination && (
+          <div className="pagination-container">
+              <div className="row">
+                  <div className="col">
+                      {pagination.prevLink && (
+                          <button onClick={() => fetchProducts(handlePaginationClick(pagination.prevLink))} className="btn btn-primary">
+                              Previous Page
+                          </button>
+                      )}
+                  </div>
+                  <div className="col text-right">
+                      {pagination.nextLink && (
+                          <button onClick={() => fetchProducts(handlePaginationClick(pagination.nextLink))} className="btn btn-primary">
+                              Next Page
+                          </button>
+                      )}
+                  </div>
+              </div>
+              <p>Page {pagination.page} of {pagination.totalPages}</p>
           </div>
-        )}
-      </div>
+      )}
     </>
   );
 }

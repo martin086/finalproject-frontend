@@ -1,32 +1,51 @@
 const PRODUCTS_API = 'http://localhost:8080/api/products' || 'https://finalproject-backend-rwbk.onrender.com/api/products';
 
-
-export const getProducts = async (limit = 10, page = 1, category = null, stock = null, sort = null) => { 
+export const getProducts = async (params) => { 
     try {
-        const params = {
-            limit: limit ? `limit=${limit}&` : 'limit=10&',
-            page: page ? `page=${page}&` : 'page=1&',
-            category: category ? `category=${category}&` : '',
-            stock: stock ? `stock=${stock}&` : '',
-            sort: sort ? `sort=${sort}&` : '',
-        }
-
-        const productsQuery = `${PRODUCTS_API}?${params.category}${params.limit}${params.page}${params.stock}${params.sort}`;
+        const queryString = Object.entries(params)
+            .map(([key, value]) => `${key}=${value}`)
+            .join('&');
+        
+        const productsQuery = `${PRODUCTS_API}?${queryString}`;
         const response = await fetch(productsQuery, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
             },
-        })
-        const productsData = await response.json(); // Store the response in a variable
-        console.log(productsData);
-        const productsArray = productsData.payload;
-        console.log(productsArray)
-        return productsArray;
+        });
+        const productsData = await response.json();
+        return productsData;
     } catch (error) {
         throw new Error(error)
     }
 }
+
+// export const getProducts = async (limit, page, category, stock, sort) => { 
+//     try {
+//         const params = {
+//             limit: limit ? `limit=${limit}&` : '',
+//             page: page ? `page=${page}&` : '',
+//             category: category ? `category=${category}&` : '',
+//             stock: stock ? `stock=${stock}&` : '',
+//             sort: sort ? `sort=${sort}&` : '',
+//         }
+
+//         const productsQuery = `${PRODUCTS_API}?${params.category}${params.limit}${params.page}${params.stock}${params.sort}`;
+//         const response = await fetch(productsQuery, {
+//             method: "GET",
+//             headers: {
+//                 "Content-Type": "application/json"
+//             },
+//         })
+//         const productsData = await response.json(); // Store the response in a variable
+//         console.log(productsData);
+//         //const productsArray = productsData.payload;
+//         //console.log(productsArray)
+//         return productsData;
+//     } catch (error) {
+//         throw new Error(error)
+//     }
+// }
 
 export const getProductById = async (id) => {
     try {

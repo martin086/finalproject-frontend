@@ -1,23 +1,28 @@
 import { useState, useEffect } from "react";
-//import { consultarBDD } from "../../assets/funciones";
 import { useParams } from "react-router-dom";
 import ItemDetail from "../ItemDetail/ItemDetail";
-import { getProducto } from "../../assets/firebase";
+import { getProductById } from "../../db/Product";
 import { useDarkModeContext } from "../../context/DarkModeContext";
 
 
 const ItemDetailContainer = () => {
-    const [producto, setProducto] = useState([]);
+    const [producto, setProducto] = useState();
     const {id} = useParams()
     const {darkMode} = useDarkModeContext()
     useEffect(() => {
-        getProducto(id).then(prod => setProducto(prod))
-        
-    }, []);
+        getProductById(id)
+        .then(prod => setProducto(prod))
+        .catch(error => {
+            console.error("Error fetching product:", error);
+            setProducto(null);
+        });
+    }, [id]);
+
+    console.log(producto)
 
     return (
         <div className={`card mb-3 container itemDetail ${darkMode ? 'text-white bg-secondary' : 'border-light' }`}>
-            <ItemDetail item={producto} />
+            {producto ? <ItemDetail item={producto} /> : <p>Product not found or error occurred.</p>}
         </div>
     );
 }

@@ -37,20 +37,20 @@ const Login = () => {
     return (
         <>
             <form className="d-flex flex-column justify-content-center" onSubmit={handleLogin}>
-                <label htmlFor="email">Email:</label>
-                <input onChange={(e) => setEmail(e.target.value)} className="m-1" type="email" id="email" name="email" required />
+                <label htmlFor="email" className="m-auto w-auto form-label">Email</label>
+                <input onChange={(e) => setEmail(e.target.value)} className="m-auto w-auto" type="email" id="email" name="email" required />
                 
-                <label htmlFor="password">Password:</label>
-                <input onChange={(e) => setPassword(e.target.value)} className="m-1" type="password" id="password" name="password" required />
+                <label htmlFor="password" className="m-auto w-auto form-label">Password</label>
+                <input onChange={(e) => setPassword(e.target.value)} className="m-auto w-auto rounded" type="password" id="password" name="password" required />
                 
-                <button className="btn btn-primary m-2 justify-content-center" id="submitBtn" type="submit">
+                <button className="btn btn-primary m-4 justify-content-center" id="submitBtn" type="submit">
                     <FontAwesomeIcon icon={faArrowRightToBracket} /> Login
                 </button>
                 <p className={`message-error-login text-center ${loginError ? '' : 'hidden'}`}>Usuario o contraseña incorrectos</p>
             </form>
             <div className="d-flex justify-content-center m-1">
-                <Link className="m-1" to="/forgotpassword">Olvidé mi Password</Link>
-                <Link className="m-1" to="/register">
+                <Link className="m-1 fw-bold" to="/forgotpassword">Olvidé mi Password</Link>
+                <Link className="m-1 fw-bold" to="/register">
                     Registrarse
                 </Link>
             </div>

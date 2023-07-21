@@ -1,4 +1,6 @@
 import {useState} from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCartArrowDown } from '@fortawesome/free-solid-svg-icons';
 
 const ItemCount = ({stock, onAdd}) => {
     const [contador, setContador] = useState(1);
@@ -15,7 +17,10 @@ const ItemCount = ({stock, onAdd}) => {
     <button onClick={() => decrementar()} className='btn btn-dark mx-2'>-</button>
     {contador}
     <button onClick={() => incrementar()} className='btn btn-dark mx-2'>+</button>
-    <button onClick={() => agregarAlCarrito()} className='btn btn-info'>Agregar</button>
+    <button onClick={() => agregarAlCarrito()} className='btn btn-info'>
+    <FontAwesomeIcon icon={faCartArrowDown} />
+    <span> Agregar</span>
+    </button>
     </>
   )
 }

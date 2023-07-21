@@ -28,29 +28,25 @@ const Register = () => {
     return (
         <div className="container divForm" >
             <h3>Formulario de registro</h3>
-            <form onSubmit={consultarForm} ref={datForm}>
+            <form className="d-flex flex-column justify-content-center" onSubmit={consultarForm} ref={datForm}>
                 <div className="mb-3">
-                    <label htmlFor="first_name" className="form-label">Nombre</label>
-                    <input type="text" className="form-control" name="first_name" required />
+                    <label htmlFor="first_name" className="justify-content-center form-label">Nombre</label>
+                    <input type="text" className="m-auto w-auto form-control" name="first_name" required />
                 </div>
                 <div className="mb-3">
-                    <label htmlFor="last_name" className="form-label">Apellido</label>
-                    <input type="text" className="form-control" name="last_name" required />
+                    <label htmlFor="last_name" className="justify-content-center form-label">Apellido</label>
+                    <input type="text" className="m-auto w-auto form-control" name="last_name" required />
                 </div>
                 <div className="mb-3">
-                    <label htmlFor="email" className="form-label">Email</label>
-                    <input type="email" className="form-control" name="email" />
+                    <label htmlFor="email" className="justify-content-center form-label">Email</label>
+                    <input type="email" className="m-auto w-auto form-control" name="email" />
                 </div>
-                {/* <div className="mb-3">
-                    <label htmlFor="age" className="form-label">Edad</label>
-                    <input type="number" className="form-control" name="age" />
-                </div> */}
                 <div className="mb-3">
-                    <label htmlFor="password" className="form-label">Contraseña</label>
-                    <input type="password" className="form-control" name="password" />
+                    <label htmlFor="password" className="justify-content-center form-label">Password</label>
+                    <input type="password" className="m-auto w-auto form-control" name="password" />
                 </div>
 
-                <button type="submit" className="btn btn-primary">Registrar</button>
+                <button type="submit" className="btn btn-primary m-4 justify-content-center">Registrarse</button>
             </form>
         </div>
     )
