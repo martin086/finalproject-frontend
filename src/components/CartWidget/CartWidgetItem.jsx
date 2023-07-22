@@ -9,7 +9,7 @@ export const CartWidgetItem = ({ item }) => {
 
     return (
         <span className="cart-item" key={item._id}>
-            <Link to={'/item/' + item._id}>
+            <Link to={'/products/' + item._id}>
                 <img src={item.thumbnails[0]} className="cart-item-img" alt={item.title} />
             </Link>
             <div className="cart-item-detail">

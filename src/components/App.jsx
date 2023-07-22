@@ -23,6 +23,7 @@ import Checkout from './Checkout/Checkout';
 import Home from './Home/Home';
 import ForgotPassword from './ForgotPassword/ForgotPassword';
 import ItemDetail from './ItemDetail/ItemDetail';
+import { OrderConfirm } from './Checkout/OrderConfirm';
 
 const App = () => {
 
@@ -42,6 +43,7 @@ const App = () => {
               <Route path='/products/:id' element={<ItemDetailContainer/>}/>  
               <Route path='/cart' element={<Cart/>}/>
               <Route path='/checkout' element={<Checkout/>}/>
+              <Route path='/orderconfirm' element={<OrderConfirm/>}/>
               <Route path='/contacto' element={<Contacto/>}/>
               <Route path='*' element={<NotFound/>}/>
             </Routes>

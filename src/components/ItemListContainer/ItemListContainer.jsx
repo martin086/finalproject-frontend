@@ -4,12 +4,9 @@ import { logout } from "../../db/Session";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { getProducts } from "../../db/Product";
 import { UserContext } from "../../context/UserContext";
+import { CartContext } from "../../context/CartContext";
 import queryString from 'query-string';
 
-//import { consultarBDD } from "../../assets/funciones.js";
-//import { cargarBDD, getProductos, getProducto, updateProducto, deleteProducto } from "../../assets/firebase";
-
-//Consultar BDD
 
 const ItemListContainer = () => {
 
@@ -19,8 +16,8 @@ const ItemListContainer = () => {
   const [params, setParams] = useState({});
   const [pagination, setPagination] = useState(null);
   
-  
-    const location = useLocation();
+  const location = useLocation();
+
     const fetchProducts = async () => {
       try {
         const { page, limit, category, stock, sort } = params;
@@ -36,6 +33,7 @@ const ItemListContainer = () => {
               prevLink: response.prevLink,
               nextLink: response.nextLink
             });
+            setUser(userData.user)
           
         } else {
             console.error("No products data found.");
@@ -47,9 +45,8 @@ const ItemListContainer = () => {
 
     useEffect(() => {
       const queryParams = queryString.parse(location.search);
-      //const page = queryParams.page ? parseInt(queryParams.page) : 1;
       setParams(queryParams);
-    }, [location.search]);
+    }, [location.search, userData]);
 
     useEffect(() => {
       fetchProducts();
@@ -60,7 +57,7 @@ const ItemListContainer = () => {
       let navPage = page.slice(4);
       console.log(navPage)
       navigate(`${navPage}`);
-  };
+    };
 
   // Function to handle logout
   const handleLogout = async () => {
@@ -76,15 +73,17 @@ const ItemListContainer = () => {
 
   if (!userData) {
     navigate('/login')
-    return null;
+    return;
   }
-  //console.log(userData);
+  console.log(userData);
   
   return (
       
     <>
       <div className="fluid-container">
-        <span>Bienvenido {userData.user.first_name}, tu rol es: {userData.user.role}.</span>
+        <span>
+          Bienvenido {userData.first_name}, tu rol es: {userData.role}.
+        </span>
         <button onClick={handleLogout}>Logout</button>
       </div>
       <div className="row cardProductos card-img-top itemListContainer">
@@ -95,14 +94,14 @@ const ItemListContainer = () => {
               <div className="row">
                   <div className="col">
                       {pagination.prevLink && (
-                          <button onClick={() => fetchProducts(handlePaginationClick(pagination.prevLink))} className="btn btn-primary">
+                          <button onClick={() => handlePaginationClick(pagination.prevLink)} className="btn btn-primary">
                               Previous Page
                           </button>
                       )}
                   </div>
                   <div className="col text-right">
                       {pagination.nextLink && (
-                          <button onClick={() => fetchProducts(handlePaginationClick(pagination.nextLink))} className="btn btn-primary">
+                          <button onClick={() => handlePaginationClick(pagination.nextLink)} className="btn btn-primary">
                               Next Page
                           </button>
                       )}

@@ -1,48 +1,59 @@
-import React from 'react';
+import {useContext, useState, React} from 'react';
 import { useNavigate } from 'react-router-dom';
-import { createOC, getOC, getProducto, updateProducto } from '../../assets/firebase';
-import { useCarritoContext } from '../../context/CarritoContext';
+import { getProductById, updateProduct } from '../../db/Product';
+import { CartContext } from '../../context/CartContext';
 import { toast } from 'react-toastify';
-import OrderForm from './Form/Form';
+import OrderForm from './Form/OrderForm';
+import { OrderConfirm } from './OrderConfirm';
+import { UserContext } from '../../context/UserContext';
+
 
 const Checkout = () => {
+    const {totalPrice, cart, clearCart, purchaseCart} = useContext(CartContext);
+    const {userData} = useContext(UserContext)
+    const [orderData, setOrderData] = useState(null);
+    const navigate = useNavigate();
 
-    const {totalPrice, carrito, emptyCart} = useCarritoContext();
-
-    let navigate = useNavigate();
-
-    const consultarFormulario = (cliente) => {
-        const aux = [...carrito]
+    const consultarFormulario = async (cliente) => {
+        
+        try {
+            const aux = [...cart]
         aux.forEach(prodCarrito => {
-            getProducto(prodCarrito.id).then(prodBDD => {
+            getProductById(prodCarrito.id).then(prodBDD => {
                 if(prodBDD.stock >= prodCarrito.cant) {
                     prodBDD.stock -= prodCarrito.cant
-                    updateProducto(prodCarrito.id, prodBDD)
+                    updateProduct(prodCarrito.id, prodBDD)
                 } else {
                     toast.error(`El producto ${prodBDD.nombre} no tiene stock disponible.`)
-                    emptyCart() //removeItem(prodBDD.id)
+                    clearCart() //removeItem(prodBDD.id)
                     navigate("/")
                 }
             })
         })
 
-        createOC(cliente, totalPrice(), new Date().toISOString().slice(0,10), carrito).then(ordenCompra => {
-            getOC(ordenCompra.id).then(item => {
-                toast.success(`¡Gracias por su compra! Su n° de orden es: ${item.id}`)
-                emptyCart()
-                navigate("/")
-            }).catch(error => {
-                toast.error("Su orden no pudo ser generada.")
-                console.log(error)
-            })
-        })
+        // Trigger the purchaseCart function.
+        const order = await purchaseCart();
+        console.log(order)
         console.log(cliente)
-        
-    }
+        // Store the order data in the state.
+        setOrderData(order);
+        // Navigate to the '/orderconfirm' route after a successful purchase
+        navigate('/orderconfirm');
+        toast.success(`¡Gracias por su compra! Su n° de orden es: ${order.id}`)
+        } catch (error) {
+            toast.error("Su orden no pudo ser generada.");
+            console.error('Error during checkout:', error)
+        }
+    };
+    
 
     return (
         <div className="container">
-            <OrderForm sendOrder={consultarFormulario}/>
+            {orderData ? (
+                <OrderConfirm order={orderData} />
+            ) : (
+                <OrderForm sendOrder={consultarFormulario}/>
+            )}
         </div>
     );
 }

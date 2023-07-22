@@ -1,10 +1,10 @@
-import React, { useEffect } from "react";
-import ReactDOM from "react-dom";
+import React, { useEffect, useContext } from "react";
 import { Formik, Form, useField, useFormikContext } from "formik";
 import * as Yup from "yup";
-import styled from "@emotion/styled";
 import "../../../styles-form.css";
 import { useDarkModeContext } from "../../../context/DarkModeContext";
+import { UserContext } from "../../../context/UserContext";
+import styled from "@emotion/styled";
 
 const MyTextInput = ({ label, ...props }) => {
   // useField() returns [formik.getFieldProps(), formik.getFieldMeta()]
@@ -63,25 +63,29 @@ const StyledLabel = styled.label`
 // Form function
 const OrderForm = ({sendOrder}) => {
   const {darkMode} = useDarkModeContext()
+  const {userData} = useContext(UserContext)
+
+  console.log(userData)
+
   return (
     <>
       <h1 className={`${darkMode ? 'text-light' : 'text-dark'}`}>Por favor completa tus datos para finalizar tu compra:</h1>
       <Formik
         initialValues={{
-          firstName: "",
-          lastName: "",
-          email: "",
-          email2: "",
+          first_name: `${userData.first_name}`,
+          last_name: `${userData.last_name}`,
+          email: `${userData.email}`,
+          email2: `${userData.email}`,
           dni: "",
           cel: "",
           direccion: "",
           acceptedTerms: false, // added for our checkbox
         }}
         validationSchema={Yup.object().shape({
-          firstName: Yup.string()
+          first_name: Yup.string()
             .max(15, "Debe contener 15 caracteres o menos")
             .required("Nombre requerido"),
-          lastName: Yup.string()
+          last_name: Yup.string()
             .max(20, "Debe contener 20 caracteres o menos")
             .required("Apellido requerido"),
           email: Yup.string()
@@ -107,13 +111,13 @@ const OrderForm = ({sendOrder}) => {
         <Form>
           <MyTextInput
             label="Nombre"
-            name="firstName"
+            name="first_name"
             type="text"
             placeholder="Juan"
           />
           <MyTextInput
             label="Apellido"
-            name="lastName"
+            name="last_name"
             type="text"
             placeholder="Perez"
           />

@@ -8,7 +8,7 @@ export const CartProvider = ({ children }) => {
     const [cart, setCart] = useState([]);
     const [totalItems, setTotalItems] = useState(0);
     const [totalPrice, setTotalPrice] = useState(0);
-    const [invoice, setInvoice] = useState(null);
+    const [orderData, setOrderData] = useState(null);
 
     useEffect(() => {
         setTotalItems(cart.reduce((previous, current) => previous + current.quantity, 0));
@@ -21,7 +21,7 @@ export const CartProvider = ({ children }) => {
 
     useEffect(() => {
         fetchCart();
-    }, [invoice]);
+    }, [orderData]);
 
     async function fetchCart() {
         try {
@@ -108,11 +108,15 @@ export const CartProvider = ({ children }) => {
     async function purchaseCart() {
         try {
             const purchaseResult = await createNewPurchase();
-            if (purchaseResult) {
-                setInvoice(purchaseResult);
+            if (purchaseResult && purchaseResult.invoice) {
+                setOrderData(purchaseResult.invoice);
+                return purchaseResult.invoice;
+            } else {
+                return null;
             }
         } catch (error) {
             console.error('Error on purchase process:', error);
+            return null;
         }
     }
 
@@ -127,7 +131,7 @@ export const CartProvider = ({ children }) => {
                 totalPrice,
                 setTotalPrice,
                 totalItems,
-                invoice,
+                orderData,
                 purchaseCart,
             }}
         >

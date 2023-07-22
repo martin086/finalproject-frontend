@@ -6,10 +6,10 @@ export const UserProvider = ({ children }) => {
     const [userData, setUserData] = useState(null);
 
     const setUser = (newUserData) => {
-        const { cart_id, email, first_name, last_name, _id } = newUserData;
+        const { idCart, email, first_name, last_name, _id } = newUserData;
         setUserData(newUserData);
         localStorage.setItem('user', 
-        JSON.stringify({ cart_id, email, first_name, last_name, _id }));
+        JSON.stringify({ idCart, email, first_name, last_name, _id }));
     };
 
     const removeUser = () => {
